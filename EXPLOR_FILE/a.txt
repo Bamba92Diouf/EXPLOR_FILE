@@ -1,0 +1,118 @@
+<section>
+      <div class="section1">
+        <!--Mes dossiers dans section-->
+
+          <?php
+
+
+
+                  $racine='./pagea.php';      //on stock le chemin vers la racine
+
+             //on initialise path
+              $path="";
+                  echo "<a href='$racine'><img src='img/accuel.png' width='25' height='25'></a>";
+
+              if(sizeof($_GET) != 0)
+                {
+                  $path =
+                  $_GET["path"];
+              }
+
+              if(strlen($path)==0) $path=".";
+              else if ($path !=".")
+              {
+                  $parent_dir = substr($path,0,strrpos($path,"/")); //contient le dossier précédemment visité
+
+
+
+                      echo "<a href='./pagea.php?path=$parent_dir'><img src='img/retour.png' width='25' height='25'></a>"; //lien vers le dossier précédent
+
+                  ?>
+
+              <?php
+              }
+              // on ouvre le dossier et on le parcourt
+              $dir = opendir($path);
+              $directories=array();
+              $files=array();
+              while($file = readdir($dir))
+              {
+                  if($file != "." && $file != "..")
+                  {
+                      // on stock les dossiers et les fichiers dans deux variables différentes
+                      if(is_dir("$path/$file"))
+                      {
+                          $directories[]="$file";
+                      }
+                      else $files[]="$file";
+                  }
+              }
+              // on tri le tableau directories
+                  if(isset($directories))
+                      {
+                          sort($directories);
+                          foreach($directories as $d) //on parcourt le tableau et on l'affiche
+                          {
+                                            //avec un icône pour les dossiers
+                              echo "<tr><th scope='row'><a href='./pagea.php?path=$path/$d'><img src='img/dossier.png'width='25' height='25' ><br>$d</a></th> <td>&nbsp;&nbsp;&nbsp;&nbsp;<br>" ."</td>"." <td></td></tr>";
+                               //et un lien vers les sous dossiers
+                          ?>
+
+                          <?php
+                          }
+                      }
+
+
+            // on trie les fichoers dans l'ordre alphabétique
+                  if(isset($files))
+                  {
+                      sort($files);
+                  if($files!= 'pagea.php')
+                  {
+                      foreach($files as $files2)
+
+                      {
+                           $extension = pathinfo($files2, PATHINFO_EXTENSION);
+
+                           if ($extension=="pdf")
+                            {
+                                echo "<tr><th scope='row'><a href=\"$path/$files2\" > <img src='img/pdf.png' width='25' height='25'></th></tr>";
+                           }
+
+                           elseif ($extension == "png"  || $extension =="jpg"|| $extension =="JPG" || $extension =="jpeg" || $extension =="ico" )
+                            {
+
+
+                                echo "<tr><th scope='row'><a href=\"$path/$files2\" > <img src='img/img.png' width='25' height='25'></th></tr>";
+
+                           }
+                            elseif ($extension == "mp3" )
+                            {
+
+
+                                echo "<tr><th scope='row'><a href=\"$path/$files2\" > <img src='img/mp3.png' width='25' height='25'></th></tr>";
+
+                           }
+                            elseif ($extension == "doc" || $extension == "docx" )
+                            {
+
+
+                                echo "<tr><th scope='row'><a href=\"$path/$files2\" > <img src='img/doc.png' width='25' height='25'></th></tr>";
+
+                           }
+
+
+                           else if ( $extension!="pdf" && "png" && "jpg"&& "JPG" && "jpeg" && "mp3" && "ico" && "doc" && "docx")
+                               {
+                          echo "<tr><th scope='row'><a href=\"$path/$files2\" > <img src='img/fichier.png' width='25' height='25'></th></tr>";}           //ouverture du fichier dans une nouvelle fenêtre
+
+                      }
+                  }
+                  }
+                  //on ferme la lecture dossier
+              closedir($dir);
+
+
+           ?>
+      </div>
+    </section>
